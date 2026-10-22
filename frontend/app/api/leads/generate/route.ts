@@ -15,8 +15,10 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
+    const backendBaseUrl = (process.env.BACKEND_API_URL || "http://localhost:8000").replace(/\/$/, "");
+    const upstreamUrl = new URL("/leads/generate", backendBaseUrl).toString();
 
-    const upstreamResponse = await fetch("https://prospex-green.vercel.app/leads/generate", {
+    const upstreamResponse = await fetch(upstreamUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

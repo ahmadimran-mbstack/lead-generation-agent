@@ -524,23 +524,20 @@ git clone <repository-url>
 cd <repository-directory>
 ```
 
-## 2. Create the virtual environment
+## 2. Set up the backend environment
 
-Using `uv`:
+From the backend folder:
 
 ```bash
+cd backend
 uv sync
 ```
 
 Or create a virtual environment manually:
 
 ```bash
+cd backend
 python -m venv .venv
-```
-
-Activate it on Windows:
-
-```bash
 .venv\Scripts\activate
 ```
 
@@ -548,19 +545,64 @@ Activate it on Windows:
 
 ## 3. Configure environment variables
 
-Create:
+Create a backend environment file:
 
 ```text
-.env
+backend/.env
 ```
 
-and configure the required API keys and database credentials.
+and configure the required API keys and database credentials. A complete example is provided in:
+
+```text
+backend/.env.example
+```
+
+Required variables include:
+
+```text
+EXA_API_KEY=
+GEMINI_API_KEY=
+POSTGRES_URI=
+API_ACCESS_TOKEN=
+HUBSPOT_SERVICE_KEY=
+LANGSMITH_API_KEY=
+```
+
+Create a frontend local environment file:
+
+```text
+frontend/.env.local
+```
+
+and copy the values from:
+
+```text
+frontend/.env.example
+```
+
+Use the same `API_ACCESS_TOKEN` value in both the backend and frontend server environment files.
 
 ---
 
-## 4. Run the application
+## 4. Initialize the database
+
+Create the lead table before running the app:
 
 ```bash
+cd backend
+psql "$POSTGRES_URI" -f database/create_leads_table.sql
+```
+
+This script creates the `leads` table, a unique business key, and the indexes used during lookups.
+
+---
+
+## 5. Run the application
+
+Start the backend:
+
+```bash
+cd backend
 uv run uvicorn api.main:app --reload
 ```
 
@@ -574,6 +616,20 @@ Interactive API documentation:
 
 ```text
 http://localhost:8000/docs
+```
+
+Start the frontend:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Open the app locally at:
+
+```text
+http://localhost:3000
 ```
 
 ---

@@ -22,6 +22,8 @@ from graph.execute_graph import execute_graph
 
 security = HTTPBearer(auto_error=False)
 
+FRONTEND_LIVE_URL = os.getenv("FRONTEND_LIVE_URL")
+
 
 def verify_access_token(
     credentials: HTTPAuthorizationCredentials | None = Depends(security),
@@ -41,7 +43,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://prospex-toua.vercel.app", "http://localhost:3000", "http://localhost:8000"],
+    allow_origins=[FRONTEND_LIVE_URL, "http://localhost:3000", "http://localhost:8000"],
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
